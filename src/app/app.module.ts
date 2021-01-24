@@ -16,6 +16,7 @@ import { TodosComponent } from "./components/todos/todos.component";
 import { HeaderComponent } from "./components/header/header.component";
 import { StatisticsComponent } from "./components/statistics/statistics.component";
 import { FormsModule } from "@angular/forms";
+import { RoutingModule } from "./modules/routing/routing.module";
 
 @NgModule({
   declarations: [
@@ -34,6 +35,7 @@ import { FormsModule } from "@angular/forms";
     AmexioEnterpriseModule,
     AmexioMapModule,
     AmexioWidgetModule,
+    RoutingModule,
     // AmexioChartD3Module,
   ],
   providers: [],
