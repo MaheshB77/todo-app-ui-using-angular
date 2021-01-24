@@ -1,5 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import { ActivatedRoute, Router } from "@angular/router";
+import { Router } from "@angular/router";
 
 @Component({
   selector: "app-todos",
@@ -7,10 +7,8 @@ import { ActivatedRoute, Router } from "@angular/router";
   styleUrls: ["./todos.component.css"],
 })
 export class TodosComponent implements OnInit {
-  constructor(private router: Router, private activatedRoute: ActivatedRoute) {}
-
+  constructor(private router: Router) {}
   ngOnInit() {}
-
   onCreateTodo() {
     this.router.navigate(["todos", "edit"]);
   }

@@ -4,6 +4,7 @@
     <div class="col-md-6 offset-md-3">
       <form (ngSubmit)="onSubmit(todoForm)" #todoForm="ngForm">
         <div class="form-group">
+          <!-- Input -->
           <label for="todoTitle">Enter the task</label>
           <input
             type="text"
@@ -14,7 +15,10 @@
             [(ngModel)]="todoTitle"
             required
             minlength="3"
+            [disabled]="disableInput"
           />
+
+          <!-- Validation message -->
           <div
             *ngIf="todoForm.invalid && todoForm.touched"
             class="alert alert-danger my-1"
@@ -24,6 +28,7 @@
           </div>
         </div>
 
+        <!-- Various buttons -->
         <div class="container">
           <div class="row">
             <div class="col-md-12 d-flex justify-content-around">
@@ -41,18 +46,31 @@
               >
                 Cancel
               </button>
-              <button class="btn btn-secondary" type="reset">Reset</button>
+              <button
+                *ngIf="!disableInput"
+                class="btn btn-secondary"
+                type="reset"
+              >
+                Reset
+              </button>
 
               <!-- If todo is already exists -->
               <button
-                *ngIf="!isNewTodo && existingTodo.todoStatus !== 'completed'"
+                *ngIf="showMarkAsCompleteButton"
                 class="btn btn-primary"
                 type="button"
                 (click)="onComplete()"
               >
                 Mark as complete
               </button>
-              <button *ngIf="!isNewTodo" class="btn btn-danger" type="button">Delete</button>
+              <button
+                *ngIf="showDeleteButton"
+                class="btn btn-danger"
+                type="button"
+                (click)="onDelete()"
+              >
+                Delete
+              </button>
             </div>
           </div>
         </div>

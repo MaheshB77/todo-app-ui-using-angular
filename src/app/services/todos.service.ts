@@ -9,6 +9,9 @@ import { Todo } from "../models/todo.model";
 export class TodosService {
   updatedTodos = new Subject<Todo[]>();
   todos: Todo[] = Todos;
+  pending: number = 0;
+  completed: number = 0;
+  deleted: number = 0;
   constructor() {}
 
   getTodoById(todoId: number): Todo {
@@ -28,6 +31,23 @@ export class TodosService {
         return todo;
       }
     });
+    this.updatedTodos.next(this.todos);
+  }
+
+  updateStatus(todoId: number) {
+    this.todos = this.todos.map((todo) => {
+      if (todo.todoId === todoId) {
+        todo.todoStatus = "completed";
+        return todo;
+      } else {
+        return todo;
+      }
+    });
+    this.updatedTodos.next(this.todos);
+  }
+
+  deleteTodo(todoId: number) {
+    this.todos = this.todos.filter((todo) => todo.todoId !== todoId);
     this.updatedTodos.next(this.todos);
   }
 }

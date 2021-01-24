@@ -12,10 +12,12 @@ import { TodosService } from "src/app/services/todos.service";
 export class TodoEditComponent implements OnInit {
   @ViewChild("todoForm") todoForm: NgForm;
   todoTitle: string;
-  isEditing: boolean = false;
   isNewTodo: boolean = false;
   existingTodo: Todo;
   todoId: number;
+  showDeleteButton: boolean = false;
+  showMarkAsCompleteButton: boolean = false;
+  disableInput: boolean = false;
 
   constructor(
     private router: Router,
@@ -30,10 +32,16 @@ export class TodoEditComponent implements OnInit {
         this.todoId = parseInt(params.id);
         this.existingTodo = this.todosService.getTodoById(this.todoId);
         this.todoTitle = this.existingTodo.todoTitle;
+        this.showMarkAsCompleteButton =
+          this.existingTodo.todoStatus !== "completed";
+        this.disableInput = this.existingTodo.todoStatus === "completed";
         this.isNewTodo = false;
+        this.showDeleteButton = true;
       } else {
         // If creating new todo
         this.isNewTodo = true;
+        this.showDeleteButton = false;
+        this.showMarkAsCompleteButton = false;
       }
     });
   }
@@ -42,7 +50,7 @@ export class TodoEditComponent implements OnInit {
     if (this.isNewTodo) {
       let id = this.todosService.todos.length + 1; //Generating simple unique id
       let title = todoForm.value.todoTitle;
-      let status = "pending";
+      let status = "pending"; // Setting default status
       let newTodo = new Todo(id, title, status);
       this.todosService.addTodo(newTodo);
     } else {
@@ -60,9 +68,13 @@ export class TodoEditComponent implements OnInit {
   }
 
   onComplete() {
-    console.log("Completed");
+    this.todosService.updateStatus(this.todoId);
+    this.disableInput = true;
+  }
 
-    // Change the status of TODO to "completed"
-    // Return to the "/todos" route
+  onDelete() {
+    this.todosService.deleteTodo(this.todoId);
+    this.todoForm.reset();
+    this.router.navigate(["/todos"]);
   }
 }

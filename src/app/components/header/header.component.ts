@@ -1,5 +1,4 @@
 import { Component, OnInit } from "@angular/core";
-import { TodosService } from "src/app/services/todos.service";
 
 @Component({
   selector: "app-header",
@@ -9,7 +8,7 @@ import { TodosService } from "src/app/services/todos.service";
 export class HeaderComponent implements OnInit {
   isShowing: boolean = false;
 
-  constructor(private todosService: TodosService) {}
+  constructor() {}
 
   ngOnInit() {}
 }
