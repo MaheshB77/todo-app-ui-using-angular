@@ -17,6 +17,7 @@ import { HeaderComponent } from "./components/header/header.component";
 import { StatisticsComponent } from "./components/statistics/statistics.component";
 import { FormsModule } from "@angular/forms";
 import { RoutingModule } from "./modules/routing/routing.module";
+import { ErrorComponent } from './components/error/error.component';
 
 @NgModule({
   declarations: [
@@ -26,6 +27,7 @@ import { RoutingModule } from "./modules/routing/routing.module";
     TodosComponent,
     HeaderComponent,
     StatisticsComponent,
+    ErrorComponent,
   ],
   imports: [
     BrowserModule,

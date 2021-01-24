@@ -4,6 +4,7 @@ import { RouterModule, Routes } from "@angular/router";
 import { TodosComponent } from "src/app/components/todos/todos.component";
 import { StatisticsComponent } from "src/app/components/statistics/statistics.component";
 import { TodoEditComponent } from "src/app/components/todos/todo-edit/todo-edit.component";
+import { ErrorComponent } from "src/app/components/error/error.component";
 
 const appRoutes: Routes = [
   { path: "", component: TodosComponent },
@@ -16,8 +17,8 @@ const appRoutes: Routes = [
     ],
   },
   { path: "stats", component: StatisticsComponent },
-  // TODO
-  // Error page
+  { path: "error-page", component: ErrorComponent },
+  { path: "**", redirectTo: "error-page" },
 ];
 
 @NgModule({
