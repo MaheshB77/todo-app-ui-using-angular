@@ -2,36 +2,32 @@
   <div class="row">
     <div class="col-md-6 offset-md-3">
       <div class="list-group">
-        <button class="list-group-item list-group-item-action" type="button">
-          TODO Name
+        <!-- List of TODOS -->
+        <button
+          *ngFor="let todo of todos"
+          class="list-group-item list-group-item-action"
+          type="button"
+          [routerLink]="['/todos', todo.todoId, 'edit']"
+          routerLinkActive="active"
+        >
+          {{ todo.todoTitle }}
+          <span
+            class="badge"
+            [ngClass]="{
+              'badge-warning': todo.todoStatus === 'pending',
+              'badge-success': todo.todoStatus === 'completed',
+              'badge-primary': todo.todoStatus === 'cancelled'
+            }"
+            >{{ todo.todoStatus }}</span
+          >
+        </button>
+        <!-- <button
+          class="list-group-item list-group-item-action"
+          type="button"
+          [routerLink]="['todos', '1', 'edit']"
+        >
           <span class="badge badge-warning">Status</span>
-        </button>
-        <button class="list-group-item list-group-item-action" type="button">
-          Click
-          <span class="badge badge-success">Status</span>
-        </button>
-        <button class="list-group-item list-group-item-action" type="button">
-          Click
-          <span class="badge badge-warning">Status</span>
-        </button>
-        <button class="list-group-item list-group-item-action" type="button">
-          Click
-        </button>
-        <button class="list-group-item list-group-item-action" type="button">
-          Click
-        </button>
-        <button class="list-group-item list-group-item-action" type="button">
-          Click
-        </button>
-        <button class="list-group-item list-group-item-action" type="button">
-          Click
-        </button>
-        <button class="list-group-item list-group-item-action" type="button">
-          Click
-        </button>
-        <button class="list-group-item list-group-item-action" type="button">
-          Click
-        </button>
+        </button> -->
       </div>
     </div>
   </div>

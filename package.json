@@ -24,6 +24,7 @@
     "amexio-ng-extensions": "^5.20.4",
     "bootstrap": "^4.6.0",
     "core-js": "^2.5.4",
+    "font-awesome": "^4.7.0",
     "rxjs": "~6.2.0",
     "zone.js": "~0.8.26"
   },

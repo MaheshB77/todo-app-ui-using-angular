@@ -1,5 +1,5 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <a class="navbar-brand" href="#">TODOS</a>
+  <a class="navbar-brand" [routerLink]="['/']">TODOS</a>
 
   <!-- Hamburger button -->
   <button
@@ -22,10 +22,21 @@
   >
     <ul class="navbar-nav">
       <li class="nav-item">
-        <a class="nav-link" href="#">Home</a>
+        <a
+          class="nav-link"
+          [routerLink]="['']"
+          routerLinkActive="border-bottom"
+          [routerLinkActiveOptions]="{ exact: true }"
+          >Home</a
+        >
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="#">Completed todos</a>
+        <a
+          class="nav-link"
+          [routerLink]="['/stats']"
+          routerLinkActive="border-bottom"
+          >Stats</a
+        >
       </li>
     </ul>
   </div>

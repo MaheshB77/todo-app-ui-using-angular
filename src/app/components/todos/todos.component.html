@@ -1,11 +1,13 @@
 <div>
-  <!-- <app-todo-edit></app-todo-edit> -->
+  <!-- Create or edit the TODO -->
   <router-outlet></router-outlet>
 
   <!-- Create TODO Button -->
   <div class="row">
     <div class="col-md-4 offset-md-4 my-2 d-flex justify-content-center">
-      <button class="btn btn-success" type="button">Create TODO</button>
+      <button class="btn btn-success" type="button" (click)="onCreateTodo()">
+        Create TODO
+      </button>
     </div>
   </div>
   <app-todo-list></app-todo-list>

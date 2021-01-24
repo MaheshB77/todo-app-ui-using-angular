@@ -18,7 +18,6 @@ const appRoutes: Routes = [
   { path: "stats", component: StatisticsComponent },
   // TODO
   // Error page
-  // Edit page
 ];
 
 @NgModule({
