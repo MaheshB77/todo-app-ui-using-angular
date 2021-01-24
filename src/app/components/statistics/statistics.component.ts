@@ -1,4 +1,5 @@
 import { Component, OnInit } from "@angular/core";
+import { TodosService } from "src/app/services/todos.service";
 @Component({
   selector: "app-statistics",
   templateUrl: "./statistics.component.html",
@@ -6,12 +7,12 @@ import { Component, OnInit } from "@angular/core";
 })
 export class StatisticsComponent implements OnInit {
   donutChartData: any;
-  constructor() {
+  constructor(private todosService: TodosService) {
     this.donutChartData = [
       ["TODO", "Quantity"],
-      ["Completed", 11],
-      ["Pending", 9],
-      ["Deleted", 2],
+      ["Completed", this.todosService.completed],
+      ["Pending", this.todosService.pending],
+      ["Deleted", this.todosService.deleted],
     ];
   }
   ngOnInit() {}
