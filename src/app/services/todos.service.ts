@@ -1,6 +1,6 @@
+import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Subject } from "rxjs";
-import Todos from "../data/todos";
 import { Todo } from "../models/todo.model";
 
 @Injectable({
@@ -8,54 +8,68 @@ import { Todo } from "../models/todo.model";
 })
 export class TodosService {
   updatedTodos = new Subject<Todo[]>();
-  todos: Todo[] = Todos;
+  todos: Todo[];
+  isLoading: boolean = false;
   pending: number = 0;
   completed: number = 0;
   deleted: number = 0;
-  constructor() {
-    this.setStats();
+  constructor(private http: HttpClient) {
+    this.getTodos();
   }
 
-  getTodoById(todoId: number): Todo {
+  getTodoById(todoId: string): Todo {
     return this.todos.find((todo) => todo.todoId === todoId);
   }
 
-  addTodo(todo: Todo) {
-    this.todos = [...this.todos, todo];
-    this.updatedTodos.next(this.todos);
-    this.setStats();
+  addTodo(todo: any) {
+    this.http
+      .post("http://localhost:8080/api/todos/add-todo", todo)
+      .subscribe((data) => {
+        console.log("Added new todo ", data);
+        this.getTodos();
+      });
   }
 
   updateTodo(updatedTodo: Todo) {
-    this.todos = this.todos.map((todo) => {
-      if (todo.todoId === updatedTodo.todoId) {
-        return updatedTodo;
-      } else {
-        return todo;
-      }
-    });
-    this.updatedTodos.next(this.todos);
-    this.setStats();
+    this.http
+      .put(`http://localhost:8080/api/todos/${updatedTodo.todoId}`, updatedTodo)
+      .subscribe((response) => {
+        console.log("Updated the todo");
+        this.getTodos();
+      });
   }
 
-  updateStatus(todoId: number) {
-    this.todos = this.todos.map((todo) => {
-      if (todo.todoId === todoId) {
-        todo.todoStatus = "completed";
-        return todo;
-      } else {
-        return todo;
-      }
-    });
-    this.updatedTodos.next(this.todos);
-    this.setStats();
+  updateStatus(todoId: string) {
+    // Finding the todo to mark it as complete
+    let completedTodo = this.todos.find((todo) => todo.todoId === todoId);
+    completedTodo.todoStatus = "completed";
+
+    this.http
+      .put(`http://localhost:8080/api/todos/${todoId}`, completedTodo)
+      .subscribe((response) => {
+        console.log("Todo marked as complete");
+        this.getTodos();
+      });
   }
 
-  deleteTodo(todoId: number) {
-    this.todos = this.todos.filter((todo) => todo.todoId !== todoId);
-    this.updatedTodos.next(this.todos);
-    this.setStats();
-    this.deleted = this.deleted + 1;
+  deleteTodo(todoId: string) {
+    this.http
+      .delete(`http://localhost:8080/api/todos/${todoId}`, {
+        responseType: "text",
+      })
+      .subscribe((response) => {
+        console.log(response);
+        console.log("Todo deleted !!");
+        this.getTodos();
+      });
+  }
+
+  getTodos() {
+    this.http.get("http://localhost:8080/api/todos/").subscribe((data) => {
+      this.todos = <Todo[]>data;
+      this.updatedTodos.next(this.todos);
+      this.setStats();
+    });
   }
 
   setStats() {

@@ -14,7 +14,7 @@ export class TodoEditComponent implements OnInit {
   todoTitle: string;
   isNewTodo: boolean = false;
   existingTodo: Todo;
-  todoId: number;
+  todoId: string;
   showDeleteButton: boolean = false;
   showMarkAsCompleteButton: boolean = false;
   disableInput: boolean = false;
@@ -29,7 +29,7 @@ export class TodoEditComponent implements OnInit {
     this.activatedRoute.params.subscribe((params: Params) => {
       if (params.id) {
         // If editing already existing todo
-        this.todoId = parseInt(params.id);
+        this.todoId = params.id;
         this.existingTodo = this.todosService.getTodoById(this.todoId);
         this.todoTitle = this.existingTodo.todoTitle;
         this.showMarkAsCompleteButton =
@@ -48,10 +48,9 @@ export class TodoEditComponent implements OnInit {
 
   onSubmit(todoForm: NgForm) {
     if (this.isNewTodo) {
-      let id = this.todosService.todos.length + 1; //Generating simple unique id
-      let title = todoForm.value.todoTitle;
-      let status = "pending"; // Setting default status
-      let newTodo = new Todo(id, title, status);
+      let todoTitle = todoForm.value.todoTitle;
+      let todoStatus = "pending"; // Setting default status
+      let newTodo = { todoTitle, todoStatus };
       this.todosService.addTodo(newTodo);
     } else {
       let oldTodo = this.todosService.getTodoById(this.todoId);

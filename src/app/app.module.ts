@@ -8,6 +8,7 @@ import {
 } from "amexio-ng-extensions";
 // import { AmexioChartD3Module } from "amexio-chart-d3";
 import { NgModule } from "@angular/core";
+import { HttpClientModule } from "@angular/common/http";
 
 import { AppComponent } from "./app.component";
 import { TodoListComponent } from "./components/todos/todo-list/todo-list.component";
@@ -17,7 +18,7 @@ import { HeaderComponent } from "./components/header/header.component";
 import { StatisticsComponent } from "./components/statistics/statistics.component";
 import { FormsModule } from "@angular/forms";
 import { RoutingModule } from "./modules/routing/routing.module";
-import { ErrorComponent } from './components/error/error.component';
+import { ErrorComponent } from "./components/error/error.component";
 
 @NgModule({
   declarations: [
@@ -38,6 +39,7 @@ import { ErrorComponent } from './components/error/error.component';
     AmexioMapModule,
     AmexioWidgetModule,
     RoutingModule,
+    HttpClientModule,
     // AmexioChartD3Module,
   ],
   providers: [],
