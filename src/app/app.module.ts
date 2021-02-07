@@ -19,6 +19,7 @@ import { StatisticsComponent } from "./components/statistics/statistics.componen
 import { FormsModule } from "@angular/forms";
 import { RoutingModule } from "./modules/routing/routing.module";
 import { ErrorComponent } from "./components/error/error.component";
+import { TranslocoRootModule } from "./transloco/transloco-root.module";
 
 @NgModule({
   declarations: [
@@ -40,6 +41,7 @@ import { ErrorComponent } from "./components/error/error.component";
     AmexioWidgetModule,
     RoutingModule,
     HttpClientModule,
+    TranslocoRootModule,
     // AmexioChartD3Module,
   ],
   providers: [],
