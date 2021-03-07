@@ -2,6 +2,7 @@ import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Subject } from "rxjs";
 import { Todo } from "../models/todo.model";
+import Constants from "../constants/Constants";
 
 @Injectable({
   providedIn: "root",
@@ -23,7 +24,7 @@ export class TodosService {
 
   addTodo(todo: any) {
     this.http
-      .post("http://localhost:8080/api/todos/add-todo", todo)
+      .post(`http://localhost:${Constants.PORT}/api/todos/add-todo`, todo)
       .subscribe((data) => {
         console.log("Added new todo ", data);
         this.getTodos();
@@ -32,7 +33,7 @@ export class TodosService {
 
   updateTodo(updatedTodo: Todo) {
     this.http
-      .put(`http://localhost:8080/api/todos/${updatedTodo.todoId}`, updatedTodo)
+      .put(`http://localhost:${Constants.PORT}/api/todos/${updatedTodo.todoId}`, updatedTodo)
       .subscribe((response) => {
         console.log("Updated the todo");
         this.getTodos();
@@ -45,7 +46,7 @@ export class TodosService {
     completedTodo.todoStatus = "completed";
 
     this.http
-      .put(`http://localhost:8080/api/todos/${todoId}`, completedTodo)
+      .put(`http://localhost:${Constants.PORT}/api/todos/${todoId}`, completedTodo)
       .subscribe((response) => {
         console.log("Todo marked as complete");
         this.getTodos();
@@ -54,7 +55,7 @@ export class TodosService {
 
   deleteTodo(todoId: string) {
     this.http
-      .delete(`http://localhost:8080/api/todos/${todoId}`, {
+      .delete(`http://localhost:${Constants.PORT}/api/todos/${todoId}`, {
         responseType: "text",
       })
       .subscribe((response) => {
@@ -65,7 +66,7 @@ export class TodosService {
   }
 
   getTodos() {
-    this.http.get("http://localhost:8080/api/todos/").subscribe((data) => {
+    this.http.get(`http://localhost:${Constants.PORT}/api/todos/`).subscribe((data) => {
       this.todos = <Todo[]>data;
       this.updatedTodos.next(this.todos);
       this.setStats();

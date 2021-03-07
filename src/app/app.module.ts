@@ -6,7 +6,6 @@ import {
   AmexioMapModule,
   AmexioWidgetModule,
 } from "amexio-ng-extensions";
-// import { AmexioChartD3Module } from "amexio-chart-d3";
 import { NgModule } from "@angular/core";
 import { HttpClientModule } from "@angular/common/http";
 
@@ -42,7 +41,6 @@ import { TranslocoRootModule } from "./transloco/transloco-root.module";
     RoutingModule,
     HttpClientModule,
     TranslocoRootModule,
-    // AmexioChartD3Module,
   ],
   providers: [],
   bootstrap: [AppComponent],
