@@ -19,6 +19,9 @@ import { FormsModule } from "@angular/forms";
 import { RoutingModule } from "./modules/routing/routing.module";
 import { ErrorComponent } from "./components/error/error.component";
 import { TranslocoRootModule } from "./transloco/transloco-root.module";
+import { UserComponent } from './components/user/user.component';
+import { LoginComponent } from './components/user/login/login.component';
+import { SignupComponent } from './components/user/signup/signup.component';
 
 @NgModule({
   declarations: [
@@ -29,6 +32,9 @@ import { TranslocoRootModule } from "./transloco/transloco-root.module";
     HeaderComponent,
     StatisticsComponent,
     ErrorComponent,
+    UserComponent,
+    LoginComponent,
+    SignupComponent,
   ],
   imports: [
     BrowserModule,

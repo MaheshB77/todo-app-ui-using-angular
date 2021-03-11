@@ -3,6 +3,7 @@ import { Injectable } from "@angular/core";
 import { Subject } from "rxjs";
 import { Todo } from "../models/todo.model";
 import Constants from "../constants/Constants";
+import { UserService } from "./user.service";
 
 @Injectable({
   providedIn: "root",
@@ -14,7 +15,7 @@ export class TodosService {
   pending: number = 0;
   completed: number = 0;
   deleted: number = 0;
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private userService: UserService) {
     this.getTodos();
   }
 
@@ -66,11 +67,16 @@ export class TodosService {
   }
 
   getTodos() {
-    this.http.get(`http://localhost:${Constants.PORT}/api/todos/`).subscribe((data) => {
-      this.todos = <Todo[]>data;
-      this.updatedTodos.next(this.todos);
-      this.setStats();
-    });
+    // this.http.get(`http://localhost:${Constants.PORT}/api/todos/`).subscribe((data) => {
+    //   this.todos = <Todo[]>data;
+    //   this.updatedTodos.next(this.todos);
+    //   this.setStats();
+    // });
+
+    this.userService.todos.subscribe((todos) => {
+      this.todos = todos;
+    })
+
   }
 
   setStats() {
