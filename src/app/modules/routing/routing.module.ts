@@ -8,6 +8,7 @@ import { ErrorComponent } from "src/app/components/error/error.component";
 import { UserComponent } from "src/app/components/user/user.component";
 import { LoginComponent } from "src/app/components/user/login/login.component";
 import { SignupComponent } from "src/app/components/user/signup/signup.component";
+import { TodoResolver } from "src/app/services/todo-resolver.service";
 
 const appRoutes: Routes = [
   { path: "", component: UserComponent },
@@ -22,6 +23,7 @@ const appRoutes: Routes = [
   {
     path: "todos",
     component: TodosComponent,
+    resolve: { userWithToken: TodoResolver},
     children: [
       { path: "edit", component: TodoEditComponent },
       { path: ":id/edit", component: TodoEditComponent },

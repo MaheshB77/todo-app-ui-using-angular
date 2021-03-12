@@ -1,6 +1,6 @@
 import { HttpClient } from "@angular/common/http";
 import { Component, DoCheck, OnDestroy, OnInit } from "@angular/core";
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute, Data } from "@angular/router";
 import { Subscription } from "rxjs";
 import urls from "src/app/constants/Url";
 import { Todo } from "src/app/models/todo.model";
@@ -16,7 +16,8 @@ import { UserService } from "src/app/services/user.service";
 export class TodoListComponent implements OnInit, OnDestroy {
   todos: Todo[] = [];
   substription: Subscription;
-  show = false;
+  userWithToken: UserWithToken;
+  
   constructor(
     private todosService: TodosService,
     private userService: UserService,
@@ -26,12 +27,12 @@ export class TodoListComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
 
-    this.userService.todos.subscribe((todos) => {
-      this.todos = todos;
-      console.log("From TODOLIST : ", this.todos);
+    this.activatedRoute.data.subscribe((data: Data) => {
+      this.userWithToken = data["userWithToken"];
+      this.todos = this.userWithToken.user.userTodos;
     });
-    this.show = true;
   }
+
   ngOnDestroy() {
     // this.substription.unsubscribe();
   }
