@@ -33,7 +33,7 @@ export class TodoEditComponent implements OnInit {
         this.existingTodo = this.todosService.getTodoById(this.todoId);
         this.todoTitle = this.existingTodo.todoTitle;
         this.showMarkAsCompleteButton =
-          this.existingTodo.todoStatus !== "completed";
+        this.existingTodo.todoStatus !== "completed";
         this.disableInput = this.existingTodo.todoStatus === "completed";
         this.isNewTodo = false;
         this.showDeleteButton = true;

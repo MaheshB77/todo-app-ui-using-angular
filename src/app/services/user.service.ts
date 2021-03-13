@@ -14,15 +14,17 @@ import UserWithToken from '../models/user-with-token.model';
 export class UserService {
   jwtToken = new Subject<string>();
   todos = new Subject<Todo[]>();
+  userWithToken = new Subject<UserWithToken>();
   userLoginObservable: Observable<UserWithToken>;
   userLogin: UserLogin;
 
   constructor(private http: HttpClient, private router: Router) { }
 
   login(userLogin: UserLogin) {
-
+    
     this.userLoginObservable = this.http.post<UserWithToken>(urls.LOGIN_URL, userLogin).pipe(tap(userWithToken => {
       console.log("From TAP : " , userWithToken);
+      this.userWithToken.next(userWithToken);
       this.todos.next(userWithToken.user.userTodos);
     }));
 
