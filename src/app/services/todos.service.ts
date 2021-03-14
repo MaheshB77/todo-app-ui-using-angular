@@ -2,7 +2,6 @@ import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Subject } from "rxjs";
 import { Todo } from "../models/todo.model";
-import Constants from "../constants/Constants";
 import { UserService } from "./user.service";
 import { DataService } from "./data.service";
 import urls from "../constants/Url";
@@ -68,6 +67,9 @@ export class TodosService {
           this.dataService.updateUserWithToken(updatedUserWithToken);
           this.dataService.updateTodos(updatedUserWithToken.user.userTodos);
           this.dataService.todos.next(updatedUserWithToken.user.userTodos);
+
+          // Update stats
+          this.getTodos();
         },
         (err) => {
           console.log("Error occured during adding new todo : ", err);
@@ -75,6 +77,7 @@ export class TodosService {
       );
   }
 
+  // Update todo
   updateTodo(updatedTodo: Todo) {
     console.log("Todo to be updated : ", updatedTodo);
 
@@ -93,42 +96,135 @@ export class TodosService {
 
     // Making http request to update the todo
     this.http
-      .put(urls.UPDATE_TODOS_URL + `${userId}`, userToUpdate, {
+      .put<User>(urls.UPDATE_TODOS_URL + `${userId}`, userToUpdate, {
         headers: { AuthorizedToken: jwtToken },
       })
-      .subscribe((response) => {
-        console.log(response);
-      }, (err) => {
-        console.log(err.error);
-      });
+      .subscribe(
+        (updatedResponse) => {
+          console.log("Updated todo response : ", updatedResponse);
+
+          // Preparing the data to be stored in local storage
+          let updatedUserWithToken: UserWithToken = {
+            user: {
+              id: updatedResponse.id,
+              userFirstName: updatedResponse.userFirstName,
+              userLastName: updatedResponse.userLastName,
+              userEmail: updatedResponse.userEmail,
+              password: updatedResponse.password,
+              userTodos: updatedResponse.userTodos,
+            },
+            token: this.dataService.getJwtToken(),
+          };
+
+          // Save the returned data from the backend to the local storage
+          this.dataService.updateUserWithToken(updatedUserWithToken);
+          this.dataService.updateTodos(updatedUserWithToken.user.userTodos);
+          this.dataService.todos.next(updatedUserWithToken.user.userTodos);
+
+          // Update stats
+          this.getTodos();
+        },
+        (err) => {
+          console.log(err.error);
+        }
+      );
   }
 
+  // Update status of todo
   updateStatus(todoId: string) {
     // Finding the todo to mark it as complete
-    let completedTodo = this.todos.find((todo) => todo.todoId === todoId);
+    let completedTodo: Todo = this.todos.find((todo) => todo.todoId === todoId);
     completedTodo.todoStatus = "completed";
 
+    console.log("Completed todo : ", completedTodo);
+
+    // Preparing request body
+    let userToUpdate = this.dataService.getUser();
+    let updatedTodos = this.dataService.getTodos().map((todo) => {
+      if (todo.todoId === todoId) {
+        return completedTodo;
+      } else {
+        return todo;
+      }
+    });
+    userToUpdate.userTodos = updatedTodos;
+    let userId = this.dataService.getUserWithToken().user.id;
+    let jwtToken = this.dataService.getJwtToken();
+
+    // Making http request to change the status of todo
     this.http
-      .put(
-        `http://localhost:${Constants.PORT}/api/todos/${todoId}`,
-        completedTodo
-      )
-      .subscribe((response) => {
-        console.log("Todo marked as complete");
+      .put<User>(urls.UPDATE_TODOS_URL + `${userId}`, userToUpdate, {
+        headers: { AuthorizedToken: jwtToken },
+      })
+      .subscribe((updatedResponse) => {
+        console.log("Updated status response : ", updatedResponse);
+
+        // Preparing the data to be stored in local storage
+        let updatedUserWithToken: UserWithToken = {
+          user: {
+            id: updatedResponse.id,
+            userFirstName: updatedResponse.userFirstName,
+            userLastName: updatedResponse.userLastName,
+            userEmail: updatedResponse.userEmail,
+            password: updatedResponse.password,
+            userTodos: updatedResponse.userTodos,
+          },
+          token: this.dataService.getJwtToken(),
+        };
+
+        // Save the returned data from the backend to the local storage
+        this.dataService.updateUserWithToken(updatedUserWithToken);
+        this.dataService.updateTodos(updatedUserWithToken.user.userTodos);
+        this.dataService.todos.next(updatedUserWithToken.user.userTodos);
+
+        // Update stats
         this.getTodos();
+      }, (err) => {
+        console.log("Error occured : ", err);
       });
   }
 
+  // Delete todo
   deleteTodo(todoId: string) {
-    this.http
-      .delete(`http://localhost:${Constants.PORT}/api/todos/${todoId}`, {
-        responseType: "text",
-      })
-      .subscribe((response) => {
-        console.log(response);
-        console.log("Todo deleted !!");
-        this.getTodos();
-      });
+    // Prepare the request body
+    let updatedTodos = this.dataService
+      .getTodos()
+      .filter((todo) => todo.todoId !== todoId);
+    let userToUpdate = this.dataService.getUser();
+    userToUpdate.userTodos = updatedTodos;
+    let userId = this.dataService.getUserWithToken().user.id;
+    let jwtToken = this.dataService.getJwtToken();
+
+    // Make http request
+    this.http.put<User>(urls.UPDATE_TODOS_URL + `${userId}`, userToUpdate, {
+      headers: { AuthorizedToken: jwtToken },
+    }).subscribe((updatedResponse) => {
+      console.log("Response after deleting the post : ", updatedResponse);
+
+      // Preparing the data to be stored in local storage
+      let updatedUserWithToken: UserWithToken = {
+        user: {
+          id: updatedResponse.id,
+          userFirstName: updatedResponse.userFirstName,
+          userLastName: updatedResponse.userLastName,
+          userEmail: updatedResponse.userEmail,
+          password: updatedResponse.password,
+          userTodos: updatedResponse.userTodos,
+        },
+        token: this.dataService.getJwtToken(),
+      };
+
+      // Save the returned data from the backend to the local storage
+      this.dataService.updateUserWithToken(updatedUserWithToken);
+      this.dataService.updateTodos(updatedUserWithToken.user.userTodos);
+      this.dataService.todos.next(updatedUserWithToken.user.userTodos);
+
+      // Update stats
+      this.getTodos();
+
+    }, (err) => {
+      console.log("Error occured : ", err);
+    });
   }
 
   getTodos() {
