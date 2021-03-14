@@ -25,14 +25,19 @@ export class TodoListComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    // Get todos from local storage
+    this.todos = this.dataService.getTodos();
 
+    // Get todos from Subject (This is useful to reflect todos when we update/add/delete todos)
+    this.dataService.todos.subscribe((currTodos) => {
+      this.todos = currTodos;
+    })
+
+    // Fetch todos on login
     this.activatedRoute.data.subscribe((data: Data) => {
       if(data["userWithToken"]) {
         console.log("User with token : ", data["userWithToken"]);
         this.todos = data["userWithToken"].user.userTodos;
-      } else {
-        // Get from local storage
-        this.todos = this.dataService.getTodos();
       }
     });
   }

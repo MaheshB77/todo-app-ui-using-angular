@@ -48,7 +48,7 @@ export class TodosService {
       })
       .subscribe(
         (updatedResponse) => {
-          console.log(updatedResponse);
+          console.log("Response after adding new todo : ", updatedResponse);
           let updatedUserWithToken: UserWithToken = {
             user: {
               id: updatedResponse.id,
