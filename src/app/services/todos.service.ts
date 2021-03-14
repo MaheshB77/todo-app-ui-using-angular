@@ -4,6 +4,11 @@ import { Subject } from "rxjs";
 import { Todo } from "../models/todo.model";
 import Constants from "../constants/Constants";
 import { UserService } from "./user.service";
+import { DataService } from "./data.service";
+import urls from "../constants/Url";
+import { User } from "../models/user.model";
+import UserWithToken from "../models/user-with-token.model";
+import { Router } from "@angular/router";
 
 @Injectable({
   providedIn: "root",
@@ -15,7 +20,12 @@ export class TodosService {
   pending: number = 0;
   completed: number = 0;
   deleted: number = 0;
-  constructor(private http: HttpClient, private userService: UserService) {
+  constructor(
+    private http: HttpClient,
+    private userService: UserService,
+    private dataService: DataService,
+    private router: Router
+  ) {
     this.getTodos();
   }
 
@@ -23,18 +33,52 @@ export class TodosService {
     return this.todos.find((todo) => todo.todoId === todoId);
   }
 
-  addTodo(todo: any) {
+  addTodo(todo: Todo) {
+    // Create the request body to add the todo
+    let userToUpdate = this.dataService.getUser();
+    let todos = [...this.dataService.getTodos(), todo];
+    userToUpdate.userTodos = todos;
+
+    let userId = this.dataService.getUserWithToken().user.id;
+    let jwtToken = this.dataService.getJwtToken();
+
     this.http
-      .post(`http://localhost:${Constants.PORT}/api/todos/add-todo`, todo)
-      .subscribe((data) => {
-        console.log("Added new todo ", data);
-        this.getTodos();
-      });
+      .put<User>(urls.UPDATE_TODOS_URL + `${userId}`, userToUpdate, {
+        headers: { AuthorizedToken: jwtToken },
+      })
+      .subscribe(
+        (updatedResponse) => {
+          console.log(updatedResponse);
+          let updatedUserWithToken: UserWithToken = {
+            user: {
+              id: updatedResponse.id,
+              userFirstName: updatedResponse.userFirstName,
+              userLastName: updatedResponse.userLastName,
+              userEmail: updatedResponse.userEmail,
+              password: updatedResponse.password,
+              userTodos: updatedResponse.userTodos,
+            },
+            token: this.dataService.getJwtToken(),
+          };
+
+          this.dataService.updateUserWithToken(updatedUserWithToken);
+          this.dataService.updateTodos(updatedUserWithToken.user.userTodos);
+          this.dataService.todos.next(updatedUserWithToken.user.userTodos);
+
+        },
+        (err) => {
+          console.log(err);
+        }
+      );
+
   }
 
   updateTodo(updatedTodo: Todo) {
     this.http
-      .put(`http://localhost:${Constants.PORT}/api/todos/${updatedTodo.todoId}`, updatedTodo)
+      .put(
+        `http://localhost:${Constants.PORT}/api/todos/${updatedTodo.todoId}`,
+        updatedTodo
+      )
       .subscribe((response) => {
         console.log("Updated the todo");
         this.getTodos();
@@ -47,7 +91,10 @@ export class TodosService {
     completedTodo.todoStatus = "completed";
 
     this.http
-      .put(`http://localhost:${Constants.PORT}/api/todos/${todoId}`, completedTodo)
+      .put(
+        `http://localhost:${Constants.PORT}/api/todos/${todoId}`,
+        completedTodo
+      )
       .subscribe((response) => {
         console.log("Todo marked as complete");
         this.getTodos();
@@ -67,16 +114,11 @@ export class TodosService {
   }
 
   getTodos() {
-    // this.http.get(`http://localhost:${Constants.PORT}/api/todos/`).subscribe((data) => {
-    //   this.todos = <Todo[]>data;
-    //   this.updatedTodos.next(this.todos);
-    //   this.setStats();
-    // });
+    // Get todos from localStorage
+    this.todos = this.dataService.getTodos();
 
-    this.userService.todos.subscribe((todos) => {
-      this.todos = todos;
-    })
-
+    // Update/Set the stats
+    this.setStats();
   }
 
   setStats() {

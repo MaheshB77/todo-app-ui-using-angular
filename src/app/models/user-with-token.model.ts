@@ -2,7 +2,7 @@ import { Todo } from "./todo.model";
 
 interface UserWithToken {
     user: {
-        active: boolean;
+        active?: boolean;
         id: string;
         password: string;
         userEmail: string;
@@ -10,7 +10,7 @@ interface UserWithToken {
         userLastName: string;
         userTodos: Todo[]
     };
-    jwtToken: string;
+    token: string;
 }
 
 export default UserWithToken;

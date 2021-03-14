@@ -3,6 +3,7 @@ import { NgForm } from "@angular/forms";
 import { ActivatedRoute, Params, Router } from "@angular/router";
 import { Todo } from "src/app/models/todo.model";
 import { TodosService } from "src/app/services/todos.service";
+import { v4 as uuid} from 'uuid';
 
 @Component({
   selector: "app-todo-edit",
@@ -48,9 +49,10 @@ export class TodoEditComponent implements OnInit {
 
   onSubmit(todoForm: NgForm) {
     if (this.isNewTodo) {
+      let todoId = uuid();
       let todoTitle = todoForm.value.todoTitle;
       let todoStatus = "pending"; // Setting default status
-      let newTodo = { todoTitle, todoStatus };
+      let newTodo = { todoId, todoTitle, todoStatus };
       this.todosService.addTodo(newTodo);
     } else {
       let oldTodo = this.todosService.getTodoById(this.todoId);
