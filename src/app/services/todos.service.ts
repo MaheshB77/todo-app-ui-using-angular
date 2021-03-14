@@ -33,15 +33,16 @@ export class TodosService {
     return this.todos.find((todo) => todo.todoId === todoId);
   }
 
+  // Add new todo
   addTodo(todo: Todo) {
     // Create the request body to add the todo
     let userToUpdate = this.dataService.getUser();
     let todos = [...this.dataService.getTodos(), todo];
     userToUpdate.userTodos = todos;
-
     let userId = this.dataService.getUserWithToken().user.id;
     let jwtToken = this.dataService.getJwtToken();
 
+    // Making HTTP request to add the new todo
     this.http
       .put<User>(urls.UPDATE_TODOS_URL + `${userId}`, userToUpdate, {
         headers: { AuthorizedToken: jwtToken },
@@ -49,6 +50,8 @@ export class TodosService {
       .subscribe(
         (updatedResponse) => {
           console.log("Response after adding new todo : ", updatedResponse);
+
+          // Preparing the data to be stored in local storage
           let updatedUserWithToken: UserWithToken = {
             user: {
               id: updatedResponse.id,
@@ -61,27 +64,42 @@ export class TodosService {
             token: this.dataService.getJwtToken(),
           };
 
+          // Save the returned data from the backend to the local storage
           this.dataService.updateUserWithToken(updatedUserWithToken);
           this.dataService.updateTodos(updatedUserWithToken.user.userTodos);
           this.dataService.todos.next(updatedUserWithToken.user.userTodos);
-
         },
         (err) => {
-          console.log(err);
+          console.log("Error occured during adding new todo : ", err);
         }
       );
-
   }
 
   updateTodo(updatedTodo: Todo) {
+    console.log("Todo to be updated : ", updatedTodo);
+
+    // Preparing the request body to update the todos
+    let userToUpdate = this.dataService.getUser();
+    let updatedTodos = this.dataService.getTodos().map((todo) => {
+      if (todo.todoId === updatedTodo.todoId) {
+        return updatedTodo;
+      } else {
+        return todo;
+      }
+    });
+    userToUpdate.userTodos = updatedTodos;
+    let userId = this.dataService.getUserWithToken().user.id;
+    let jwtToken = this.dataService.getJwtToken();
+
+    // Making http request to update the todo
     this.http
-      .put(
-        `http://localhost:${Constants.PORT}/api/todos/${updatedTodo.todoId}`,
-        updatedTodo
-      )
+      .put(urls.UPDATE_TODOS_URL + `${userId}`, userToUpdate, {
+        headers: { AuthorizedToken: jwtToken },
+      })
       .subscribe((response) => {
-        console.log("Updated the todo");
-        this.getTodos();
+        console.log(response);
+      }, (err) => {
+        console.log(err.error);
       });
   }
 
