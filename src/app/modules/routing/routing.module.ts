@@ -9,9 +9,10 @@ import { UserComponent } from "src/app/components/user/user.component";
 import { LoginComponent } from "src/app/components/user/login/login.component";
 import { SignupComponent } from "src/app/components/user/signup/signup.component";
 import { TodoResolver } from "src/app/services/todo-resolver.service";
+import { HomeComponent } from "src/app/components/home/home.component";
 
 const appRoutes: Routes = [
-  { path: "", component: UserComponent },
+  { path: "", component: HomeComponent },
   {
     path: "user",
     component: UserComponent,

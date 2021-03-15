@@ -1,5 +1,12 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <a class="navbar-brand" [routerLink]="['/']">TODOS</a>
+  <a class="navbar-brand" [routerLink]="['/']">
+    <img
+      src="https://www.flaticon.com/svg/vstatic/svg/3884/3884623.svg?token=exp=1615819639~hmac=cd08b3ae3679acb766bfca73a78ea45f"
+      width="30"
+      height="30"
+      alt=""
+    />
+  </a>
 
   <!-- Hamburger button -->
   <button
@@ -28,6 +35,16 @@
           routerLinkActive="border-bottom"
           [routerLinkActiveOptions]="{ exact: true }"
           >Home</a
+        >
+      </li>
+
+      <li class="nav-item">
+        <a
+          class="nav-link"
+          [routerLink]="['/todos']"
+          routerLinkActive="border-bottom"
+          [routerLinkActiveOptions]="{ exact: true }"
+          >Todos</a
         >
       </li>
       <li class="nav-item">

@@ -22,6 +22,7 @@ import { TranslocoRootModule } from "./transloco/transloco-root.module";
 import { UserComponent } from './components/user/user.component';
 import { LoginComponent } from './components/user/login/login.component';
 import { SignupComponent } from './components/user/signup/signup.component';
+import { HomeComponent } from './components/home/home.component';
 
 @NgModule({
   declarations: [
@@ -35,6 +36,7 @@ import { SignupComponent } from './components/user/signup/signup.component';
     UserComponent,
     LoginComponent,
     SignupComponent,
+    HomeComponent,
   ],
   imports: [
     BrowserModule,
