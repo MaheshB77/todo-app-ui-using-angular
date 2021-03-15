@@ -29,6 +29,10 @@ export class TodosService {
   }
 
   getTodoById(todoId: string): Todo {
+
+    // Get latest todos
+    this.getTodos();
+
     return this.todos.find((todo) => todo.todoId === todoId);
   }
 

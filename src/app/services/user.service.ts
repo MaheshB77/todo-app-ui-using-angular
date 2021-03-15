@@ -1,7 +1,7 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
-import { Observable } from "rxjs";
+import { Observable, Subject } from "rxjs";
 import { tap } from "rxjs/operators";
 import urls from "../constants/Url";
 import { UserLogin } from "../models/user-login.model";
@@ -15,6 +15,7 @@ import { DataService } from "./data.service";
 export class UserService {
   userWithToken: Observable<UserWithToken>;
   userLogin: UserLogin;
+  isLoggedIn = new Subject<boolean>();
 
   constructor(
     private http: HttpClient,
@@ -38,6 +39,9 @@ export class UserService {
 
           // Save jwt token in local storage
           this.dataService.updateToken(userWithToken.token);
+
+          // Set the isLoggedIn Subject to true for showing the headers
+          this.isLoggedIn.next(true);
         })
       );
 
@@ -64,5 +68,11 @@ export class UserService {
       );
 
     this.router.navigate(["todos"]);
+  }
+
+  logout() {
+    localStorage.clear();
+    this.isLoggedIn.next(false);
+    this.router.navigate(["/"]);
   }
 }
