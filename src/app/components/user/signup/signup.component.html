@@ -1,3 +1,92 @@
-<p>
-  signup works!
-</p>
+<div class="container">
+  <div class="row">
+    <div class="col-md-6 col-xl-6 offset-md-3">
+      <form #userForm="ngForm" (ngSubmit)="onSubmit(userForm)">
+
+        <!-- First name -->
+        <amexio-row>
+          <amexio-column [size]="10">
+            <amexio-text-input
+              [min-length]="3"
+              [(ngModel)]="userFirstName"
+              [max-length]="15"
+              [allow-blank]="false"
+              field-label="First Name "
+              name="userFirstName"
+              place-holder="Enter first name "
+              icon-feedback="true"
+            >
+            </amexio-text-input>
+          </amexio-column>
+        </amexio-row>
+
+        <!-- Last name -->
+        <amexio-row>
+          <amexio-column [size]="10">
+            <amexio-text-input
+              [min-length]="3"
+              [(ngModel)]="userLastName"
+              [max-length]="15"
+              [allow-blank]="false"
+              field-label="Last Name "
+              name="userLastName"
+              place-holder="Enter last name "
+              icon-feedback="true"
+            >
+            </amexio-text-input>
+          </amexio-column>
+        </amexio-row>
+
+        <!-- Email ID -->
+        <amexio-row>
+          <amexio-column [size]="10">
+            <amexio-email-input
+              [field-label]="'Email'"
+              name="email"
+              [(ngModel)]="email"
+              [place-holder]="'Enter your email id '"
+              [allow-blank]="false"
+              [error-msg]="'Please enter valid email id'"
+              [enable-popover]="true"
+              [icon-feedback]="true"
+            >
+            </amexio-email-input>
+          </amexio-column>
+        </amexio-row>
+
+        <!-- Password -->
+        <amexio-row>
+          <amexio-column [size]="10">
+            <amexio-password-input
+              [field-label]="'Password'"
+              [min-length]="6"
+              [max-length]="15"
+              name="password"
+              [(ngModel)]="password"
+              [icon-feedback]="true"
+              [place-holder]="'Enter password'"
+            >
+            </amexio-password-input>
+          </amexio-column>
+        </amexio-row>
+
+        <!-- Validation error -->
+        <amexio-row *ngIf="error">
+          <amexio-column [size]="10">
+            <div class="alert alert-danger" role="alert">Please enter valid details</div>
+          </amexio-column>
+        </amexio-row>
+
+
+        <!-- Create and Reset buttons -->
+        <amexio-row>
+          <amexio-column [size]="10">
+            <button class="btn btn-success" type="submit">Create account</button>
+            <button class="btn btn-secondary" type="reset">Reset</button>
+          </amexio-column>
+        </amexio-row>
+      </form>
+    </div>
+  </div>
+  <hr>
+</div>

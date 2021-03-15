@@ -31,7 +31,7 @@ export class TodoListComponent implements OnInit {
     // Get todos from Subject (This is useful to reflect todos when we update/add/delete todos)
     this.dataService.todos.subscribe((currTodos) => {
       this.todos = currTodos;
-    })
+    });
 
     // Fetch todos on login
     this.activatedRoute.data.subscribe((data: Data) => {
