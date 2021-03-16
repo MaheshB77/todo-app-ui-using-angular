@@ -11,22 +11,37 @@ export class HeaderComponent implements OnInit {
   isShowing: boolean = false;
   isLoggedIn: boolean = false;
 
-  constructor(private dataService: DataService, private userService: UserService) {
-    
-    // To set isLoggedIn true after login
+  constructor(
+    private dataService: DataService,
+    private userService: UserService
+  ) {
+  }
+
+  ngOnInit() {
+    this.checkIfUserLoggedIn();
+  }
+
+  // Logut the user
+  logout() {
+    this.userService.logout();
+  }
+
+  // To check the user is logged in or not
+  checkIfUserLoggedIn() {
+    // Check if jwt token is present in local storage
+    if (this.dataService.getJwtToken()) {
+      this.isLoggedIn = true;
+    } else {
+      this.isLoggedIn = false;
+    }
+
+    // Check if user just logged in via isLoggedIn Subject of data service
     this.userService.isLoggedIn.subscribe((isLoggedIn) => {
-      if(isLoggedIn) {
+      if (isLoggedIn) {
         this.isLoggedIn = true;
       } else {
         this.isLoggedIn = false;
       }
     });
-  }
-
-  ngOnInit() {}
-
-  logout() {
-    console.log("Logout clicked");
-    this.userService.logout();
   }
 }
